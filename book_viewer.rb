@@ -13,6 +13,10 @@ helpers do
 
     result.join("\n")
   end
+
+  def highlight_query(text, query)
+    text.gsub(query, "<strong>#{query}</strong>")
+  end
 end
 
 # Calls the block for each chapter, passing that chapter's number, name, and
@@ -26,34 +30,23 @@ def each_chapter
 end
 
 # This method returns an Array of Hashes representing chapters that match the
-# specified query. Each Hash contain values for its :name and :number keys.
+# specified query. Each Hash contain values for its :name, :number, and
+# :paragraph keys. The value for :paragraph will be a hash of paragraph IDs and
+# paragraph text.
 def chapters_matching(query)
   results = []
 
-  return results if !query || query.empty?
+  return results unless query
 
   each_chapter do |number, name, contents|
-    result = {number: number, name: name} if contents.include?(query)
-    next if !result
-
-    result[:paragraphs] = paragraphs_matching(contents, query)
-
-    results << result
+    matches = {}
+    contents.split("\n\n").each.with_index do |paragraph, index|
+      matches[index] = paragraph if paragraph.include?(query)
+  end
+    results << {number: number, name: name, paragraphs: matches} if matches.any?
   end
 
   results
-end
-
-def paragraphs_matching(contents, query)
-  paragraphs = contents.split("\n\n")
-
-  paragraphs = paragraphs.each.with_index.select do |paragraph, _|
-    paragraph.include?(query)
-  end
-
-  paragraphs.map do |text, id|
-    {text: text, id: "paragraph-#{id}"}
-  end
 end
 
 get '/search' do

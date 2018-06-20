@@ -13,15 +13,17 @@
 
     <ul>
       <% @results.each do |result| %>
-        <li class='content-subhead'><%= result[:name] %></li>
+        <li>
+          <h4><%= result[:name] %></h4>
+        </li>
         <ul>
-          <% result[:paragraphs].each do |paragraph| %>
-          <li>
-            <a href="chapters/<%= result[:number] %>#<%= paragraph[:id] %>" >
-              <%= paragraph[:text] %>
-            </a>
-          </li>
-        <% end %>
+          <% result[:paragraphs].each do |index, text| %>
+            <li>
+              <a href="chapters/<%= result[:number] %>#paragraph-<%= index %>">
+                <%= highlight_query(text, params[:query]) %>
+              </a>
+            </li>
+          <% end %>
         </ul>
       <% end %>
     </ul>
