@@ -14,7 +14,7 @@ helpers do
     result.join("\n")
   end
 
-  def highlight_query(text, query)
+  def highlight(text, query)
     text.gsub(query, "<strong>#{query}</strong>")
   end
 end
