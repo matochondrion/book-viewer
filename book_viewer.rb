@@ -33,10 +33,39 @@ def chapters_matching(query)
   return results if !query || query.empty?
 
   each_chapter do |number, name, contents|
-    results << {number: number, name: name} if contents.include?(query)
+    result = {number: number, name: name} if contents.include?(query)
+    next if !result
+    result[:paragraphs] = paragraphs_matching(contents, query)
+    results << result
   end
 
   results
+end
+
+=begin
+- assign numerical paragraph ids to every paragraph in view
+- for chapters that have matches:
+  - search each paragraph based on \n\n and keep track of count
+  - search each paragraph for include? query
+  - on found, add result of par-id to result
+  - add the result as an array to the original results hash like:
+    - [ {number: number, name: name, paragraphs: [1, 3, 7]} ]
+- display the results with each iterators in the view file (details later)
+=end
+
+def paragraphs_matching(contents, query)
+  paragraphs = contents.split("\n\n")
+  paragraphs = paragraphs.each.with_index.select do |paragraph, _|
+    paragraph.include?(query)
+  end
+  paragraphs.map do |text, id|
+    {text: text, id: "paragraph-#{id}"}
+  end
+end
+
+get '/search' do
+  @results = chapters_matching(params[:query])
+  erb :search
 end
 
 not_found do
@@ -72,10 +101,5 @@ end
 
 get '/show/:name' do
   params[:name]
-end
-
-get '/search' do
-  @results = chapters_matching(params[:query])
-  erb :search
 end
 

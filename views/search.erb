@@ -13,9 +13,19 @@
 
     <ul>
       <% @results.each do |result| %>
-        <li><a href="chapters/<%= result[:number]  %>"><%= result[:name] %></a></li>
+        <li class='content-subhead'><%= result[:name] %></li>
+        <ul>
+          <% result[:paragraphs].each do |paragraph| %>
+          <li>
+            <a href="chapters/<%= result[:number] %>#<%= paragraph[:id] %>" >
+              <%= paragraph[:text] %>
+            </a>
+          </li>
+        <% end %>
+        </ul>
       <% end %>
     </ul>
+
   <% end %>
 <% end %>
 
