@@ -1,4 +1,6 @@
-# 
+# Book Viewer
+An example project to learn how to setup a Sinatra application and deploy to
+heroku
 
 ## Demo
 The demo can be viewed on a Heroku instance at:
