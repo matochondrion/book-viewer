@@ -1,5 +1,5 @@
 # Book Viewer
-An tutorial project to learn how to setup a Sinatra application and deploy to
+A tutorial project to learn how to setup a Sinatra application and deploy to
 heroku
 
 ## Demo
